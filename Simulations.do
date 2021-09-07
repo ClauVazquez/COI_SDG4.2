@@ -238,7 +238,7 @@ forvalues i=1(1)14 {
 }
 
 gen cost_tot=pop_35f*cost*n+pop_35m*cost*n
-gen ben_tot=ben*(pop_35m+pop_35f)*n
+gen ben_tot=ben*(pop_35m+pop_35f)*n if ben!=0
 
 gen coi=(ben_tot-cost_tot)*100000/current_gdp
 lab var coi "Cost of Inaction as % GDP"
