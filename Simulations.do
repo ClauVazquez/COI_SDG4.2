@@ -158,11 +158,6 @@ local share_cost=55
 local months=12
 gen cost=((usdollars*(`ecce_wages'/100)/(`ratio'*`duration')+ (usdollars*(`ecce_wages1'/100)/(`ratio'*`duration')))/(`share_cost'/100))*`months'
 merge 1:1 country_name using "$dir/codes"
-levelsof subregioncode, local(levels)
-foreach x of local levels {
-	qui summ cost if subregioncode==`x'
-	replace cost=r(mean) if cost==. & subregioncode==`x'
-}
 rename time time_cost_sim
 keep country_code_iso cost time_cost_sim
 save "$dir\costs.dta", replace 
@@ -189,6 +184,13 @@ forvalues i=1(1)4 {
 }
 
 replace year_edu=round(year_edu)
+levelsof subregioncode, local(levels)
+foreach x of local levels {
+		forvalues i=1(1)4 {
+			qui summ cost if subregioncode==`x' & gru==`i'
+			replace cost=r(mean) if cost==. & subregioncode==`x' & gru==`i'
+		}
+}
 
 drop country year def _*
 
